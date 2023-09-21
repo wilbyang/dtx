@@ -3,11 +3,12 @@ package main
 import (
 	"errors"
 	"fmt"
-	aw "github.com/deanishe/awgo"
 	"regexp"
 	"strconv"
 	"strings"
 	"time"
+
+	aw "github.com/deanishe/awgo"
 )
 
 var (
@@ -106,8 +107,15 @@ func processNow(params ...string) {
 	now := time.Now()
 	if len(params) > 0 && params[0] != "" {
 		jump := params[0]
-		d, _ := time.ParseDuration(jump)
-		now = now.Add(d)
+		if strings.HasSuffix(jump, "s") || strings.HasSuffix(jump, "m") || strings.HasSuffix(jump, "h") {
+			d, _ := time.ParseDuration(jump)
+			now = now.Add(d)
+		}
+		if strings.HasSuffix(jump, "d") {
+			d, _ := strconv.Atoi(strings.TrimSuffix(jump, "d"))
+			now = now.AddDate(0, 0, d)
+
+		}
 
 	}
 
